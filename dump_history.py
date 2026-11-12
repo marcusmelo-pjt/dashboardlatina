@@ -21,7 +21,8 @@ for i in items:
         # fallback linear: etapas anteriores à atual (ou à anterior) na sequência principal
         ref=cur if cur in LINEAR else (prev if prev in LINEAR else None)
         if ref: v|=set(LINEAR[:LINEAR.index(ref)+1])
-    out[i["id"]]=sorted(v,key=lambda x:(LINEAR+["Banco de Talentos","Reprovado"]).index(x))
+    ORD=LINEAR+["Banco de Talentos","Reprovado"]
+    out[i["id"]]=sorted(v,key=lambda x:(ORD.index(x) if x in ORD else len(ORD),x))  # etapas novas criadas no Bitrix vão para o fim, sem travar a atualização
 json.dump(out,open("history.json","w",encoding="utf-8"),ensure_ascii=False,separators=(",",":"))
 c=collections.Counter(s for v in out.values() for s in v)
 print(len(out),"itens |",nh,"com histórico real |",c)
